@@ -1,0 +1,5 @@
+   .moving{
+       opacity: 0.8;
+       user-select: none;
+       cursor : grab;
+   }
