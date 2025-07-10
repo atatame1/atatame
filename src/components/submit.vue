@@ -109,7 +109,7 @@
     import { RouteRecordRaw, useRouter } from 'vue-router';
     import { Key, Refresh, User } from '@element-plus/icons-vue';
     import { login, register,captcha } from '../api/userLogin';
-    import axios from '../utils/http';
+import initDynamicRoutes from '../router/dynamicRouter';
 
     const username=ref('')
     const password=ref('')
@@ -152,7 +152,11 @@
             // console.log(res)
             localStorage.setItem('jwtToken', token);//存储token
             console.log(localStorage.getItem('jwtToken'))
-            getRoutes()//动态生成路由
+            const success = await initDynamicRoutes(router)
+            if (success) {
+              // 确保路由已添加
+              await router.push('/views/home') // 确保这个路径与动态添加的路由路径完全一致
+            }
         }
     }
 
@@ -172,85 +176,6 @@
         }
     }
 
-
-interface ApiFunctionItem {
-  id: string
-  functionName: string
-  routerPath: string // 示例: "/user/manage" 或 "user/manage"
-  [key: string]: any
-}
- 
- 
-const getRoutes = async () => {
-  // 主框架路由配置
-  const MainFrameRoute: RouteRecordRaw = {
-    name: 'MainFrame',
-    path: '/views',
-    component: () => import('../MainFrame.vue'),
-    children: []
-  }
- 
-  try {
-    // 1. 获取功能列表
-    const response = await axios.get('/function/getFunctionByToken')
-    if (response.status !== 200) throw new Error('API请求失败')
-    if(response.data.code!== 200) ElMessage.error(response.data.message)
-
-    const allFunctions: ApiFunctionItem[] = response.data.body
-    if (!allFunctions.length) {
-      ElMessage.warning('未获取到任何功能权限')
-      return
-    }
- 
-    // 2. 预加载所有视图组件（使用import.meta.glob）
-    const viewComponents = import.meta.glob<any>('../views/**/*.vue')
-    
-    // 3. 处理每个功能项
-    const childrenRoutes: RouteRecordRaw[] = []
-    
-    for (const func of allFunctions) {
-      try {
-
-        // 构建组件路径（匹配glob模式）
-        const componentPath = `..${func.routerPath}.vue`
-        
-        // 检查组件是否存在
-        if (!viewComponents[componentPath]) {
-          console.warn(`组件未找到: ${componentPath}`)
-          continue // 跳过不存在的组件
-        }
- 
-        // 创建路由配置
-        const routeItem: RouteRecordRaw = {
-          name: `${func.functionName}_${func.id}`,
-          path: func.routerPath,
-          component: viewComponents[componentPath]
-        }
- 
-        childrenRoutes.push(routeItem)
-      } catch (routeError) {
-        console.error(`处理路由失败: ${func.functionName}`, routeError)
-      }
-    }
- 
-    // 4. 添加子路由
-    MainFrameRoute.children = childrenRoutes
- 
-    // 5. 添加到路由系统
-    router.addRoute(MainFrameRoute)
-    ElMessage.success('路由加载成功')
- 
-    // 6. 跳转到第一个可用路由或默认路由
-    router.push({'name':'MainFrame'})
- 
-  } catch (error) {
-    console.error('获取路由失败:', error)
-    ElMessage.error(`获取路由失败: ${error instanceof Error ? error.message : String(error)}`)
-    
-    // 可以在这里添加降级处理，比如加载默认路由
-    // await loadDefaultRoutes()
-  }
-}
     
     const refresh=()=>{
         username.value=''
@@ -270,7 +195,7 @@ const getRoutes = async () => {
         }
     })
 
-    localStorage.clear//清除之前的所有信息
+    localStorage.removeItem("jwtToken");//清除之前的所有信息
     captchaSubmit()//获取验证码
 </script>
    

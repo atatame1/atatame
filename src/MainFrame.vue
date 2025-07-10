@@ -15,24 +15,24 @@
 </template>
 
 <script setup lang="ts">
-import { RouterView } from 'vue-router';
+import { RouterView} from 'vue-router';
 import maintop from './components/maintop.vue';
 import functionMenu from './components/functionMenu.vue';
 import trailing from './页面效果/trailing.vue';
 import { ref } from 'vue';
- const colors=ref([
-    'rgb(020, 054, 095)',
-    'rgb(118, 162, 185)',
-    'rgb(191, 217, 299)',
-    'rgb(248, 242, 236)',
-    'rgb(214, 079, 056)',
-  ]);
+    const colors=ref([
+        'rgb(020, 054, 095)',
+        'rgb(118, 162, 185)',
+        'rgb(191, 217, 299)',
+        'rgb(248, 242, 236)',
+        'rgb(214, 079, 056)',
+    ]);
 </script>
 
 <style scoped lang="css">
 .top {
-  background-color: rgb(118, 162, 185);
-  height: 5vh;
+  background-color: rgb(119, 118, 185);
+  height: 6vh;
   line-height: 60px;
 }
 .menu {

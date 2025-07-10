@@ -1,4 +1,4 @@
-import axios from "@/utils/http";
+import axios from "../utils/http";
 import { ElMessage } from "element-plus";
 
 const url = '/login'; // 登录和注册的API路径

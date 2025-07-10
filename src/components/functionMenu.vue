@@ -5,6 +5,7 @@
       background-color="#3c414a"
       text-color="#b7bdc3"
       active-text-color="#fff"
+      default-active="/views/home"
     >
       <template v-for="item in items" :key="item.id">
         <!-- 有子菜单的项 -->
@@ -73,6 +74,7 @@ const items = reactive<MenuItem[]>([])
 // 处理菜单点击
 const handleMenuClick = (path: string) => {
   if (path) {
+    console.log(`Navigating to: ${path}`)
     router.push(path)
   }
 }
@@ -113,9 +115,6 @@ const buildMenuTree = (
 
     // 动态加载图标组件（根据实际使用的图标库调整）
     if (functionItem.icon) {
-      // 对于 Element Plus 图标，需要这样导入：
-      // const iconModule = import(`@element-plus/icons-vue`).then(m => m[functionItem.icon])
-      // 这里以 ant-design 为例：
       try {
         menuItem.iconComponent = h(icons[functionItem.icon as keyof typeof icons])
       } catch (e) {

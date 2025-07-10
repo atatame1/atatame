@@ -20,7 +20,6 @@ import submit from './components/submit.vue';
 import useBackgroundMove from './hooks/useBackgroundMove';
 import particle from './页面效果/particle.vue';
 import trailing from './页面效果/trailing.vue';
-import { useRouter } from 'vue-router';
 
 const home = ref<HTMLElement>();
 const { bindEvent,unBindEvent } = useBackgroundMove(home as Ref<HTMLElement>);
@@ -29,11 +28,11 @@ const colors = ['#a8e6cf', '#dcedc1', '#ffd3b6', '#ffaaa5'];
 const currentColor = ref(colors[0]);
 let intervalId: ReturnType<typeof setInterval>;
 
-const rainTexts = [
-  { content: '暮\n雨\n终\n将\n落\n下', left: '85%', top: '20%', fontSize: '50px' },
-  { content: '我\n为\n逝\n者\n哀\n哭', left: '90%', top: '10%', fontSize: '40px' },
-  // { content:'点击屏幕进入',left:'45%',top:'90%',fontSize:'40px'}
-];
+// const rainTexts = [
+//   { content: '胰\n岛\n素\n终\n将\n落\n下', left: '85%', top: '20%', fontSize: '50px' },
+//   { content: '我\n为\n糖\n尿\n病\n哀\n哭', left: '90%', top: '10%', fontSize: '40px' },
+//   // { content:'点击屏幕进入',left:'45%',top:'90%',fontSize:'40px'}
+// ];
 
 const changeColor = () => {
   const currentIndex = colors.indexOf(currentColor.value);
