@@ -22,7 +22,7 @@ public class Knife4jConfig {
 
     @Bean
     public GroupedOpenApi loginApi(){
-         return GroupedOpenApi.builder().group("消息api").pathsToMatch("/api/messages/**").build();
+         return GroupedOpenApi.builder().group("api").pathsToMatch("/api/**").build();
     }
 
 }

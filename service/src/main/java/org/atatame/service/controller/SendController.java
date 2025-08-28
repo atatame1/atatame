@@ -16,7 +16,6 @@ import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
 @Tag(name = "消息发送")
-@CrossOrigin
 @RestController
 @RequestMapping("/api/messages/send")
 public class SendController {
@@ -54,9 +53,8 @@ public class SendController {
                         session.sendMessage(new TextMessage(messageJson));
                     }
                 }
-            }else{
-                return Result.error();
             }
+            return Result.error();
         } catch (NullPointerException e) {
             return Result.error(ResultEnum.PARAMS_EMPTY);
         } catch (Exception e) {

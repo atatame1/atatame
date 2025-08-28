@@ -6,7 +6,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @Tag(name = "用户相关操作")
-@CrossOrigin
 @RestController
 @RequestMapping
 public class UserController {

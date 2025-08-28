@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "获得消息记录")
-@CrossOrigin
 @RestController
 @RequestMapping("/api/messages/get")
 public class MessagesController {

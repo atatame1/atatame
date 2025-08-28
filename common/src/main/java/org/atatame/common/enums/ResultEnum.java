@@ -12,7 +12,7 @@ public enum ResultEnum {
     USER_EXISTED(301,"用户已存在"),
     USER_NOT_EXISTED(306,"用户不存在"),
     USER_IS_BANED(309,"用户已被禁用"),
-    ACCOUNT_PASSWORD_ERROR(302,"密码错误"),
+    ACCOUNT_PASSWORD_ERROR(302,"用户名或密码错误"),
     ACCOUNT_EMPTY(303,"用户名或密码错不能为空"),
     CAPTCHA_EXPIRED(304,"验证码过期"),
     CAPTCHA_ERROR(305,"验证码错误"),

@@ -1,5 +1,6 @@
 package org.atatame.service.config;
 
+import org.atatame.common.result.Result;
 import org.atatame.service.filter.JwtAuthenticationFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,7 +24,8 @@ import java.util.List;
 spring security拦截器的流程
 客户端请求
     ↓
-SecurityContextPersistenceFilter (初始化SecurityContext)
+SecurityContextPersistenceFilter
+会尝试根据cookieId获取session并存入上下文若无则先放行 在finally部分会存一次当前上下文到session中
     ↓
 HeaderWriterFilter (添加安全头部)
     ↓
@@ -49,8 +51,8 @@ MessagesController (执行控制器方法)
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private JwtAuthenticationFilter jwtAuthenticationFilter;
+//    @Autowired
+//    private JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -66,16 +68,22 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 // 公开接口，无需认证
-                .requestMatchers("/register", "/login", "/webjars/**","/doc.html", "/v3/api-docs/**").permitAll()
+                .requestMatchers("/register", "/api/login", "/webjars/**","/doc.html", "/v3/api-docs/**").permitAll()
                     // WebSocket连接端点
                 .requestMatchers("/chat/**").permitAll()
                 // 其他所有请求都需要认
                 .anyRequest().authenticated()
             )
-            .formLogin(AbstractHttpConfigurer::disable)
+            .formLogin(form->form.
+                    loginProcessingUrl("/api/login")
+                    .successHandler((request, response, authentication) -> {
+                        response.setContentType("application/json;charset=UTF-8");
+                        response.getWriter().write(Result.ok().toString());
+                    })
+            )
             .httpBasic(AbstractHttpConfigurer::disable);
 
-        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
