@@ -1,11 +1,13 @@
-package org.atatame.service.pojo.vo;
+package org.atatame.service.request;
 
 import lombok.Data;
 import lombok.NonNull;
+
 import java.time.LocalDateTime;
 
 @Data
-public class MessagesVo {
+public class MessagesRequest {
+
     private String content;
 
     @NonNull

@@ -8,7 +8,7 @@ import lombok.Data;
 @Data
 @TableName(value = "user_group")
 public class user_group {
-    @TableId
+    @TableId()
     private Long id;
 
     private Long userId;

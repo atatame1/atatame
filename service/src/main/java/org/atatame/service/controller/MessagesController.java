@@ -20,7 +20,7 @@ public class MessagesController {
     @Operation(summary = "获得个人消息")
     @GetMapping("/group")
     public Result<Object> getUserMessagesRecords(@Param("selfId")Long selfId,@Param("otherId") Long otherId){
-        return Result.ok(messagesService.getMessagesByUser(selfId,otherId));
+        return Result.ok(StructMapper.INSTANCE.toMessagesVoList(messagesService.getMessagesByUser(selfId,otherId)));
     }
 
     @Operation(summary = "获得群聊消息")

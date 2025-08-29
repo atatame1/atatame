@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.atatame.service.pojo.vo.MessagesVo;
+import org.atatame.service.mapper.StructMapper;
+import org.atatame.service.request.MessagesRequest;
 import org.atatame.service.service.ChatSessionService;
 import org.atatame.service.service.MessagesService;
 import org.atatame.common.enums.MessagesTypeEnum;
@@ -31,13 +32,13 @@ public class SendController {
 
     @Operation(summary = "发送消息")
     @PostMapping
-    public Result<Object>sendMessage(@RequestBody MessagesVo request){
+    public Result<Object>sendMessage(@RequestBody MessagesRequest request){
         try{
             String messageJson = objectMapper.writeValueAsString(request);
             //发给指定用户
             if(MessagesTypeEnum.USER_CHAT.equals(request.getType())){
                 WebSocketSession targetSession = sessionManager.getUserSessions(request.getReceiverId());
-                messagesService.saveMessages(request);
+                messagesService.saveMessages(StructMapper.INSTANCE.toMessages(request));
                 if (targetSession == null || !targetSession.isOpen()) {
                     return Result.error();
                 }
@@ -47,7 +48,7 @@ public class SendController {
             //发给群聊
             else if(MessagesTypeEnum.GROUP_CHAT.equals(request.getType())){
                 // 发送给所有连接的客户端
-                messagesService.saveMessages(request);
+                messagesService.saveMessages(StructMapper.INSTANCE.toMessages(request));
                 for (WebSocketSession session : sessionManager.getGroupSessions(request.getReceiverId())) {
                     if (session.isOpen()) {
                         session.sendMessage(new TextMessage(messageJson));

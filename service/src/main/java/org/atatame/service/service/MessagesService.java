@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.atatame.service.mapper.MessagesMapper;
 import org.atatame.service.mapper.StructMapper;
 import org.atatame.service.pojo.entity.messages;
-import org.atatame.service.pojo.vo.MessagesVo;
+import org.atatame.service.request.MessagesRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,8 +16,8 @@ public class MessagesService {
     @Autowired
     private MessagesMapper messagesMapper;
 
-    public boolean saveMessages(MessagesVo vo){
-        return messagesMapper.insert(StructMapper.INSTANCE.toMessages(vo))>0;
+    public boolean saveMessages(messages messages){
+        return messagesMapper.insert(messages)>0;
     }
 
     public List<messages> getMessagesByUser(Long selfId,Long otherId){

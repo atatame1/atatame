@@ -44,7 +44,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .username(user.getName())
                 .password(user.getPassword())
                 .authorities(SecurityRoleEnum.USER)
-                .disabled(!user.isEnable())
+                .disabled(!user.getEnable())
                 .build();
 
         // 存入Redis缓存
