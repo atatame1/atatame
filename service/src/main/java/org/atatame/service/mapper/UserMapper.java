@@ -8,7 +8,6 @@ import org.atatame.service.pojo.entity.user;
 @Mapper
 public interface UserMapper extends BaseMapper<user> {
 
-
     @Select("select * from user where name=#{name}")
-    public user selectByName(String name);
+    user selectByName(String name);
 }

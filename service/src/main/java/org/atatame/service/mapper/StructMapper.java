@@ -2,7 +2,7 @@ package org.atatame.service.mapper;
 
 import org.atatame.service.pojo.entity.messages;
 import org.atatame.service.pojo.vo.MessagesVo;
-import org.atatame.service.request.MessagesRequest;
+import org.atatame.service.pojo.request.MessagesRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 

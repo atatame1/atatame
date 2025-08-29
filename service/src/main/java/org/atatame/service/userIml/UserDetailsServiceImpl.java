@@ -1,16 +1,17 @@
-package org.atatame.service.service.Impl;
+package org.atatame.service.userIml;
 
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.atatame.service.mapper.UserMapper;
 import org.atatame.service.pojo.entity.user;
 import org.atatame.common.enums.SecurityRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -40,13 +41,23 @@ public class UserDetailsServiceImpl implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
-        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-                .username(user.getName())
-                .password(user.getPassword())
-                .authorities(SecurityRoleEnum.USER)
-                .disabled(!user.getEnable())
-                .build();
+//        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
+//                .username(user.getName())
+//                .password(user.getPassword())
+//                .authorities(SecurityRoleEnum.USER)
+//                .disabled(!user.getEnable())
+//                .build();
 
+        UserDetails userDetails = new UserDetailsIml(
+                user.getId(),
+                user.getName(),
+                user.getPassword(),
+                user.getIsEnabled(),
+                true,
+                true,
+                true,
+                List.of(new SimpleGrantedAuthority(SecurityRoleEnum.USER))
+        );
         // 存入Redis缓存
         String cacheKey = USER_CACHE_PREFIX + username;
         redisTemplate.opsForValue().set(cacheKey, userDetails, 30, TimeUnit.MINUTES);

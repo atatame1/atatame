@@ -11,5 +11,5 @@ import java.util.List;
 public interface UserGroupMapper extends BaseMapper<user_group> {
 
     @Select("select group_id from user_group where user_id=#{userId}")
-    public List<Long> selectGroupIdByUserId(Long userId);
+    List<Long> selectGroupIdByUserId(Long userId);
 }

@@ -5,7 +5,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.atatame.service.mapper.StructMapper;
-import org.atatame.service.request.MessagesRequest;
+import org.atatame.service.pojo.request.MessagesRequest;
 import org.atatame.service.service.ChatSessionService;
 import org.atatame.service.service.MessagesService;
 import org.atatame.common.enums.MessagesTypeEnum;
@@ -43,6 +43,7 @@ public class SendController {
                     return Result.error();
                 }
                 targetSession.sendMessage(new TextMessage(messageJson));
+                return Result.ok();
             }
 
             //发给群聊
@@ -54,6 +55,7 @@ public class SendController {
                         session.sendMessage(new TextMessage(messageJson));
                     }
                 }
+                return Result.ok();
             }
             return Result.error();
         } catch (NullPointerException e) {

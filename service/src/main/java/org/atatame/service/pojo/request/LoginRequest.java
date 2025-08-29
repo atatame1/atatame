@@ -1,4 +1,4 @@
-package org.atatame.service.request;
+package org.atatame.service.pojo.request;
 
 import lombok.Data;
 

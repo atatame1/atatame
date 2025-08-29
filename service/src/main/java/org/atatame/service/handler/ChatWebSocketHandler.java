@@ -1,7 +1,6 @@
 package org.atatame.service.handler;
 
 import org.atatame.service.service.ChatSessionService;
-import org.atatame.service.service.UserGroupService;
 import org.atatame.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,8 +16,6 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
     @Autowired
     private ChatSessionService sessionManager;
     @Autowired
-    private UserGroupService userGroupService;
-    @Autowired
     private UserService userService;
 
     @Override
@@ -28,7 +25,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         Long id = Long.valueOf(uri.substring(uri.lastIndexOf("/") + 1));
         if(userService.isUserExist(id)){
             sessionManager.addUserSessions(id,session);
-            for(Long groupId:userGroupService.getGroupIdByUserId(id)){
+            for(Long groupId:userService.getGroupsList(id)){
                 sessionManager.addGroupSessions(groupId,session);
             }
             System.out.println("用户"+id+"已连接");

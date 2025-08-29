@@ -17,5 +17,5 @@ public interface MessagesMapper extends BaseMapper<messages> {
             "SELECT id, sender_id, receiver_id, content, deliver_time FROM messages " +
             "WHERE (sender_id = #{otherId} AND receiver_id = #{selfId}) " +
             "ORDER BY deliver_time ASC")
-    public List<messages> selectUserMessages(@Param("selfId") Long selfId,@Param("otherId")Long otherId);
+    List<messages> selectUserMessages(@Param("selfId") Long selfId,@Param("otherId")Long otherId);
 }

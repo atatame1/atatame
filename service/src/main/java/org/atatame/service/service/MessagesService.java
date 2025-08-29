@@ -2,9 +2,7 @@ package org.atatame.service.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import org.atatame.service.mapper.MessagesMapper;
-import org.atatame.service.mapper.StructMapper;
 import org.atatame.service.pojo.entity.messages;
-import org.atatame.service.request.MessagesRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
