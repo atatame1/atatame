@@ -22,6 +22,7 @@ public enum ResultEnum {
     LIMITED_AUTHORITY(310,"权限不够"),
     GOOD_NOT_EXIST(320,"商品不存在"),
     GOOD_NOT_ENOUGH(321,"商品库存不足"),
+    GROUP_NOT_EXIST(322,"群聊不存在"),
 
     PARAMS_EMPTY(400,"参数不能为空");
 

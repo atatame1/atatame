@@ -1,7 +1,6 @@
 package org.atatame.service.handler;
 
-import org.atatame.service.pojo.entity.group;
-import org.atatame.service.pojo.vo.GroupVo;
+import org.atatame.service.pojo.entity.Group;
 import org.atatame.service.service.ChatSessionService;
 import org.atatame.service.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +26,7 @@ public class ChatWebSocketHandler extends TextWebSocketHandler {
         Long id = Long.valueOf(uri.substring(uri.lastIndexOf("/") + 1));
         if(userService.isUserExist(id)){
             sessionManager.addUserSessions(id,session);
-            for(group group:userService.getGroupsList(id)){
+            for(Group group:userService.getGroupsList(id)){
                 sessionManager.addGroupSessions(group.getId(),session);
             }
             System.err.println("用户"+id+"已连接");

@@ -8,22 +8,18 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName(value = "messages")
-public class messages {
+@TableName(value = "user_messages_#{userId}")
+public class UserMessages {
     @TableId
     private Long id;
 
     private String form;
 
-    private String type;
-
     private String content;
 
-    private Long senderId;
+    private Long friendId;
 
-    private Long receiverId;
-
-    private Long groupId;
+    private Boolean selfFlag;
 
     private LocalDateTime deliverTime;
 

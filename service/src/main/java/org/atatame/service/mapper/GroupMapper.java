@@ -5,5 +5,5 @@ import org.apache.ibatis.annotations.Mapper;
 import org.atatame.service.pojo.entity.Group;
 
 @Mapper
-public interface ChatGroupMapper extends BaseMapper<Group> {
+public interface GroupMapper extends BaseMapper<Group> {
 }

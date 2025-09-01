@@ -1,11 +1,12 @@
 package org.atatame.service.mapper;
 
-import org.atatame.service.pojo.entity.group;
-import org.atatame.service.pojo.entity.messages;
-import org.atatame.service.pojo.entity.user;
+import org.atatame.service.pojo.entity.Group;
+import org.atatame.service.pojo.entity.GroupMessages;
+import org.atatame.service.pojo.entity.User;
+import org.atatame.service.pojo.entity.UserMessages;
+import org.atatame.service.pojo.vo.GroupMessagesVo;
 import org.atatame.service.pojo.vo.GroupVo;
-import org.atatame.service.pojo.vo.MessagesVo;
-import org.atatame.service.pojo.request.MessagesRequest;
+import org.atatame.service.pojo.vo.UserMessagesVo;
 import org.atatame.service.pojo.vo.UserVo;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
@@ -16,18 +17,20 @@ import java.util.List;
 public interface StructMapper {
     StructMapper INSTANCE = Mappers.getMapper(StructMapper.class);
 
-    messages toMessages(MessagesRequest vo);
+    List<UserMessagesVo> toUserMessagesVoList(List<UserMessages>ls);
 
-    List<MessagesVo> toMessagesVoList(List<messages>ls);
+    UserMessagesVo toUserMessagesVo(UserMessages m);
 
-    MessagesVo toMessagesVo(messages m);
+    List<GroupMessagesVo> toGroupMessagesVoList(List<GroupMessages>ls);
 
-    UserVo toUserVo(user u);
+    GroupMessagesVo toGroupMessagesVo(GroupMessages m);
 
-    List<UserVo> toUserVoList(List<user>ls);
+    UserVo toUserVo(User u);
 
-    GroupVo toGroupVo(group g);
+    List<UserVo> toUserVoList(List<User>ls);
 
-    List<GroupVo> toGroupVoList(List<group>ls);
+    GroupVo toGroupVo(Group g);
+
+    List<GroupVo> toGroupVoList(List<Group>ls);
 
 }
