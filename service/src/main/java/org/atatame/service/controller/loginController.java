@@ -65,11 +65,14 @@ public class loginController {
 
     @Operation(summary = "注册")
     @PostMapping("/register")
-    public Result<Object> register(@RequestBody LoginRequest registerVo){
-        if(userService.isUserNameExist(registerVo.getUsername())){
+    public Result<Object> register(@RequestBody LoginRequest registerRequest){
+        if(registerRequest==null||registerRequest.getUsername().isEmpty()||registerRequest.getPassword().isEmpty()){
+            return Result.error(ResultEnum.ACCOUNT_EMPTY);
+        }
+        if(userService.isUserNameExist(registerRequest.getUsername())){
             return Result.error(ResultEnum.USER_EXISTED);
         }
-        if(userService.register(registerVo.getUsername(),registerVo.getPassword())){
+        if(userService.register(registerRequest.getUsername(),registerRequest.getPassword())){
             return Result.ok();
         }
         return Result.error();

@@ -8,18 +8,19 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName(value = "group")
-public class group {
+@TableName("group_messages_#{groupId}")
+public class GroupMessages {
     @TableId
     private Long id;
 
-    private String name;
+    private String form;
 
-    private int num;
+    private String content;
 
-    private LocalDateTime createTime;
+    private Long senderId;
+
+    private LocalDateTime deliverTime;
 
     @TableLogic
     private byte isDeleted;
-
 }
