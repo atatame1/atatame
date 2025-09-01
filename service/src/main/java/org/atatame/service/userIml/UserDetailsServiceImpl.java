@@ -1,17 +1,19 @@
 package org.atatame.service.userIml;
 
 import org.atatame.service.mapper.UserMapper;
-import org.atatame.service.pojo.entity.User;
+import org.atatame.service.pojo.entity.user;
 import org.atatame.common.enums.SecurityRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -21,7 +23,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private RedisTemplate<String,Object>redisTemplate;
 
-    private static final String USER_CACHE_PREFIX = "User:details:";
+    private static final String USER_CACHE_PREFIX = "user:details:";
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
@@ -36,15 +38,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     public UserDetails loadUserByUsernameFromDB(String username){
         // 根据用户名查找用户
-        User user = userMapper.selectByName(username);
+        user user = userMapper.selectByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
 //        UserDetails userDetails = org.springframework.security.core.userdetails.User.builder()
-//                .username(User.getName())
-//                .password(User.getPassword())
+//                .username(user.getName())
+//                .password(user.getPassword())
 //                .authorities(SecurityRoleEnum.USER)
-//                .disabled(!User.getEnable())
+//                .disabled(!user.getEnable())
 //                .build();
 
         UserDetailsIml userDetails = new UserDetailsIml();

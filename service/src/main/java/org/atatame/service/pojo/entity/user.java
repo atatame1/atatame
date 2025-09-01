@@ -1,19 +1,26 @@
 package org.atatame.service.pojo.entity;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
+import java.time.LocalDateTime;
+
 @Data
-@TableName(value = "UserGroup")
-public class UserGroup {
-    @TableId()
+@TableName(value = "user")
+public class user {
+    @TableId
     private Long id;
 
-    private Long userId;
+    private String name;
 
-    private Long groupId;
+    private String password;
+
+    private Boolean isEnabled;
+
+    private LocalDateTime createdTime;
 
     @TableLogic
     private byte isDeleted;

@@ -1,6 +1,5 @@
 package org.atatame.service.pojo.entity;
 
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -8,16 +7,14 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-@TableName(value = "User")
-public class User {
-    @TableId
+@TableName(value = "user_friends")
+public class user_friends {
+
     private Long id;
 
-    private String name;
+    private Long userId;
 
-    private String password;
-
-    private Boolean isEnabled;
+    private Long friendId;
 
     private LocalDateTime createdTime;
 

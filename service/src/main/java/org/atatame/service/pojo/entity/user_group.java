@@ -5,21 +5,16 @@ import com.baomidou.mybatisplus.annotation.TableLogic;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-
 @Data
-@TableName(value = "Group")
-public class Group {
-    @TableId
+@TableName(value = "user_group")
+public class user_group {
+    @TableId()
     private Long id;
 
-    private String name;
+    private Long userId;
 
-    private int num;
-
-    private LocalDateTime createTime;
+    private Long groupId;
 
     @TableLogic
     private byte isDeleted;
-
 }
