@@ -8,6 +8,7 @@ public enum ResultEnum {
     FAIL(201,"操作失败"),
     OPERATION_FREQUENT(202,"请求过于频繁"),
     OPERATION_TIMEOUT(203,"请求超时"),
+    UNAUTHORIZED(204,"未认证"),
 
     USER_EXISTED(301,"用户已存在"),
     USER_NOT_EXISTED(306,"用户不存在"),

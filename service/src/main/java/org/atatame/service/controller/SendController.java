@@ -39,10 +39,9 @@ public class SendController {
             if(MessagesTypeEnum.USER_CHAT.equals(request.getType())){
                 WebSocketSession targetSession = sessionManager.getUserSessions(request.getReceiverId());
                 messagesService.saveMessages(StructMapper.INSTANCE.toMessages(request));
-                if (targetSession == null || !targetSession.isOpen()) {
-                    return Result.error();
+                if (targetSession != null && targetSession.isOpen()) {
+                    targetSession.sendMessage(new TextMessage(messageJson));
                 }
-                targetSession.sendMessage(new TextMessage(messageJson));
                 return Result.ok();
             }
 

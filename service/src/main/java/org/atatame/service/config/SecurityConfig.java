@@ -1,5 +1,9 @@
 package org.atatame.service.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletResponse;
+import org.atatame.common.enums.ResultEnum;
+import org.atatame.common.result.Result;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -10,7 +14,11 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -58,35 +66,60 @@ public class SecurityConfig {
     }
 
     @Bean
+    public SecurityContextRepository securityContextRepository() {
+        return new HttpSessionSecurityContextRepository();
+    }
+
+    @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
         return authConfig.getAuthenticationManager();//管理器内部包含所有的认证提供者实例
+    }
+
+    //未认证时调用
+    @Bean
+    public AuthenticationEntryPoint authenticationEntryPoint() {
+        return (request, response, authException) -> {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json;charset=UTF-8");
+
+            Result<Object> result = Result.error(ResultEnum.UNAUTHORIZED);
+            ObjectMapper mapper = new ObjectMapper();
+            response.getWriter().write(mapper.writeValueAsString(result));
+        };
+    }
+
+    //权限不足时调用
+    @Bean
+    public AccessDeniedHandler accessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setContentType("application/json;charset=UTF-8");
+
+            Result<Object> result = Result.error(ResultEnum.LIMITED_AUTHORITY);
+            ObjectMapper mapper = new ObjectMapper();
+            response.getWriter().write(mapper.writeValueAsString(result));
+        };
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 //跨域请求保护开关，即服务端给客户端一个token，每次请求时携带以认证，防止恶意网站盗用cookie
-            .csrf(AbstractHttpConfigurer::disable)
-                //设置会话创建为无状态
-            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .authorizeHttpRequests(auth -> auth
-                // 公开接口，无需认证
-                .requestMatchers( "/api/authenticate/login", "/webjars/**","/doc.html", "/v3/api-docs/**").permitAll()
-                    // WebSocket连接端点
-//                .requestMatchers("/chat/**").permitAll()
-                // 其他所有请求都需要认证
-                .anyRequest().authenticated()
-            )
-//                通过配置实现login接口 会默认调用UsernamePasswordAuthenticationFilter完成认证
-//            .formLogin(form->form.
-//                    loginProcessingUrl("/api/login")
-//                    .successHandler((request, response, authentication) -> {
-//                        response.setContentType("application/json;charset=UTF-8");
-//                        response.getWriter().write(Result.ok().toString());
-//                    })
-//            )
-            .httpBasic(AbstractHttpConfigurer::disable);
-
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // 启用CORS配置
+                // .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))//无状态会话
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
+                .authorizeHttpRequests(auth -> auth
+                        // 公开接口，无需认证
+                        .requestMatchers( "/api/authenticate/**", "/webjars/**","/doc.html", "/v3/api-docs/**").permitAll()
+                        // 其他所有请求都需要认证
+                        .anyRequest().authenticated()
+                )
+                .exceptionHandling(exception -> exception
+                    .authenticationEntryPoint(authenticationEntryPoint()) // 未认证处理
+                     .accessDeniedHandler(accessDeniedHandler()) // 权限不足处理
+                )
+                .httpBasic(AbstractHttpConfigurer::disable);
         System.err.println("Security configuration applied");
         return http.build();
     }
@@ -94,7 +127,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost/**"));//指定请求来源
+        configuration.setAllowedOriginPatterns(List.of("*","null"));//指定请求来源
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));//指定请求方法
         configuration.setAllowedHeaders(List.of("*"));//允许哪些认证信息
         configuration.setAllowCredentials(true);//是否允许携带认证信息

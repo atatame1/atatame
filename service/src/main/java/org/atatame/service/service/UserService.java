@@ -3,7 +3,9 @@ package org.atatame.service.service;
 import org.atatame.service.mapper.UserFriendsMapper;
 import org.atatame.service.mapper.UserGroupMapper;
 import org.atatame.service.mapper.UserMapper;
+import org.atatame.service.pojo.entity.group;
 import org.atatame.service.pojo.entity.user;
+import org.atatame.service.pojo.vo.UserVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -38,11 +40,11 @@ public class UserService {
         return userMapper.insert(user)>0;
     }
 
-    public List<Long> getFriendsList(Long id){
+    public List<user> getFriendsList(Long id){
         return userFriendsMapper.selectListByUserId(id);
     }
 
-    public List<Long> getGroupsList(Long userId){
-        return userGroupMapper.selectGroupIdByUserId(userId);
+    public List<group> getGroupsList(Long id){
+        return userGroupMapper.selectGroupIdByUserId(id);
     }
 }

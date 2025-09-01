@@ -6,6 +6,7 @@ import org.atatame.common.enums.SecurityRoleEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -26,11 +27,11 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        String cacheKy=USER_CACHE_PREFIX+username;
-        UserDetails cacheUserDetails=(UserDetails)redisTemplate.opsForValue().get(cacheKy);
-        if(cacheUserDetails!=null){
-            return cacheUserDetails;
-        }
+//        String cacheKy=USER_CACHE_PREFIX+username;
+//        UserDetails cacheUserDetails=(UserDetails)redisTemplate.opsForValue().get(cacheKy);
+//        if(cacheUserDetails!=null){
+//            return cacheUserDetails;
+//        }
 
         return loadUserByUsernameFromDB(username);
     }
@@ -48,19 +49,15 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 //                .disabled(!user.getEnable())
 //                .build();
 
-        UserDetails userDetails = new UserDetailsIml(
-                user.getId(),
-                user.getName(),
-                user.getPassword(),
-                user.getIsEnabled(),
-                true,
-                true,
-                true,
-                List.of(new SimpleGrantedAuthority(SecurityRoleEnum.USER))
-        );
-        // 存入Redis缓存
-        String cacheKey = USER_CACHE_PREFIX + username;
-        redisTemplate.opsForValue().set(cacheKey, userDetails, 30, TimeUnit.MINUTES);
+        UserDetailsIml userDetails = new UserDetailsIml();
+        userDetails.setId(user.getId());
+        userDetails.setUsername(user.getName());
+        userDetails.setPassword(user.getPassword());
+        userDetails.setEnabled(user.getIsEnabled());
+        userDetails.setAuthorities(List.of(new SimpleGrantedAuthority(SecurityRoleEnum.USER)));
+//        // 存入Redis缓存
+//        String cacheKey = USER_CACHE_PREFIX + username;
+//        redisTemplate.opsForValue().set(cacheKey, userDetails, 30, TimeUnit.MINUTES);
         return userDetails;
     }
 }
